@@ -837,7 +837,7 @@ class PyTorchAdaptor(TemplateAdaptor):
                 quantizable_ops.append((
                     op_name, self.unify_op_type_mapping[str(child.__class__.__name__)]
                     if str(child.__class__.__name__) in self.unify_op_type_mapping else
-                    str(child.__class__.__name__)))
+                    str(child.__class__.__name__), child))
             else:
                 self._get_quantizable_ops_recursively(child, op_name, quantizable_ops)
 
