@@ -2,9 +2,10 @@
 export LOGLEVEL=DEBUG
 WORKDIR=/path/to/lpot/examples/pytorch/image_recognition/imagenet/cpu/ptq
 
-cd ${WORKDIR}
-
 ARCH=resnet50
+mkdir -p ${ARCH}_autoq_run
+
+cd ${WORKDIR}
 
 nohup python main.py \
     --pretrained \
@@ -13,4 +14,4 @@ nohup python main.py \
     -e -t \
     --tuned_checkpoint ${ARCH}_autoq_run \
     --conf ./conf.${ARCH}.autoq.yaml \
-    /data/dataset/imagenet/ilsvrc2012/torchvision 2>&1 | tee log.${ARCH}.autoq &
+    /data/dataset/imagenet/ilsvrc2012/torchvision 2>&1 | tee ${ARCH}_autoq_run/log.${ARCH}.autoq &

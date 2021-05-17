@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 export LOGLEVEL=DEBUG
-WORKDIR=/path/to/lpot/examples/pytorch/image_recognition/imagenet/cpu/ptq
-
-cd ${WORKDIR}
+WORKDIR=/home/vchua/may17-lpot/lpot/examples/pytorch/image_recognition/imagenet/cpu/ptq
 
 ARCH=resnet50
+
+mkdir -p ${ARCH}_basic_run
+cd ${WORKDIR}
 
 nohup python main.py \
     --pretrained \
@@ -13,4 +14,4 @@ nohup python main.py \
     -e -t \
     --tuned_checkpoint ${ARCH}_basic_run \
     --conf ./conf.${ARCH}.basic.yaml \
-    /data/dataset/imagenet/ilsvrc2012/torchvision 2>&1 | tee log.${ARCH}.basic &
+    /data/dataset/imagenet/ilsvrc2012/torchvision 2>&1 | tee ${ARCH}_basic_run/log.${ARCH}.basic &
