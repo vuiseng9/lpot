@@ -30,6 +30,7 @@ from ..utils.create_obj_from_config import create_eval_func
 from ..utils import logger
 from ..version import __version__
 from ..conf.dotdict import DotDict, deep_get, deep_set
+import pandas as pd
 
 """The tuning strategies supported by lpot, including basic, random, bayesian and mse.
 
@@ -303,6 +304,7 @@ class TuneStrategy(object):
 
                 if need_stop:
                     break
+        self._generate_history_csv(self.history_path)
 
     def deploy_config(self):
         acc_dataloader_cfg = deep_get(self.cfg, 'evaluation.accuracy.dataloader')
@@ -546,3 +548,50 @@ class TuneStrategy(object):
             self.tuning_history.append(tuning_history)
 
         self._save()
+
+
+    def _generate_history_csv(self, picked_history_pth):
+        def history_to_df(pickle_pth):
+            with open(pickle_pth, "rb") as fh:
+                h = pickle.load(fh)
+            
+            n_metric= len(h.tuning_history[0]['baseline'])
+            dflist = []
+            for episode, episode_history in enumerate(h.tuning_history[0]['history']):
+                episode_cfg = []
+                for layer_id, (k, v) in enumerate(episode_history['tune_cfg']['op'].items()):
+                    layercfg = OrderedDict()
+                    if len(k) == 3:
+                        layer_name, layer_type, m = k
+                    elif len(k) == 2:
+                        layer_name, layer_type = k
+                        
+                    layercfg['episode'] = episode
+                    layercfg['layer_id'] = layer_id
+                    layercfg['layer_name'] = layer_name
+                    layercfg['layer_type'] = layer_type
+                    
+                    if len(k) > 2:
+                        layercfg['m'] = m
+
+                    if 'weight' in v:
+                        for kw,vw in v['weight'].items():
+                            layercfg['w_'+kw]=vw
+                    else:
+                        pass
+
+                    if 'activation' in v:
+                        for ka,va in v['activation'].items():
+                            layercfg['a_'+ka]=va
+                    else:
+                        pass
+                    
+                    for i in range(0, n_metric):
+                        layercfg['tune_res'+str(i)] = episode_history['tune_result'][i]
+                    episode_cfg.append(layercfg)
+                dflist.append(pd.DataFrame.from_dict(episode_cfg))
+
+            history_df = pd.concat(dflist).reset_index(drop=True)
+            return history_df
+        
+        history_to_df(picked_history_pth).to_csv(picked_history_pth+'.csv', index=False)
