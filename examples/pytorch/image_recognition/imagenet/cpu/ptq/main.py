@@ -106,7 +106,8 @@ parser.add_argument('--int8', dest='int8', action='store_true',
                     help='run benchmark')
 parser.add_argument('--ipex', dest='ipex', action='store_true',
                     help='tuning or benchmark with Intel PyTorch Extension')
-
+parser.add_argument('--conf', dest='conf', default='./conf.yaml', type=str, metavar='PATH',
+                    help='path to yaml config for non-ipex lpot')
 best_acc1 = 0
 
 
@@ -291,7 +292,7 @@ def main_worker(gpu, ngpus_per_node, args):
         else:
             model.eval()
             model.fuse_model()
-            quantizer = Quantization("./conf.yaml")
+            quantizer = Quantization(args.conf)
         quantizer.model = common.Model(model)
         q_model = quantizer()
         q_model.save(args.tuned_checkpoint)
