@@ -12,3 +12,4 @@
 _build
 *_run/
 saved_results/
+.ipynb_checkpoints/
