@@ -75,7 +75,7 @@ tuning:
   strategy:
     name: autoq
   workspace:
-    path: ./resnet50_autoq_run 
+    path: ./resnet50_autoq_debug_run 
   accuracy_criterion:
     relative:  0.01                                  # optional. default value is relative, other value is absolute. this example allows relative accuracy loss: 1%.
   exit_policy:

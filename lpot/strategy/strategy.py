@@ -204,8 +204,9 @@ class TuneStrategy(object):
                     if cfg['activation']['dtype'] in self.cfg.graph_optimization.precisions:
                         new_list.append(cfg)
                 else:
-                    if cfg['activation']['dtype'] not in fallback_precision_list:
-                        new_list.append(cfg)
+                    # if cfg['activation']['dtype'] not in fallback_precision_list:
+                        # new_list.append(cfg)
+                    new_list.append(cfg)
             self.opwise_quant_cfgs[key] = new_list
 
         # The tuning history ever made, structured like below:
