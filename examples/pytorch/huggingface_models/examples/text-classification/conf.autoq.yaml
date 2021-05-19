@@ -22,7 +22,7 @@ quantization:                                        # optional. tuning constrai
 
 tuning:
   workspace:
-    path: ./lpot-autoq-bert-base-uncased-finetuned-mrpc_run
+    path: ./lpot-autoq-bert-base-cased-finetuned-mrpc_run
   strategy:
     name: autoq    
   accuracy_criterion:

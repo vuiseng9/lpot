@@ -22,7 +22,7 @@ quantization:                                        # optional. tuning constrai
 
 tuning:
   workspace:
-    path: ./lpot-bert-base-uncased-finetuned-mrpc_run
+    path: ./lpot-bert-base-cased-finetuned-mrpc_run
   accuracy_criterion:
     relative:  0.01                                        # optional. default value is relative, other value is absolute. this example allows relative accuracy loss: 1%.
   exit_policy:
